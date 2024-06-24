@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .card {
+            width: 600px;
+            background-color: #fff;
+            margin: 30px auto;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .field {
+            margin-bottom: 15px;
+        }
+        strong {
+            font-weight: bold;
+        }
+
+        #delete {
+            background-color: #ff3333;
+            color: white;
+            cursor: pointer;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        #delete:hover {
+            background-color: #b30000;
+        }
+
+        .pagination{
+            width: 600px;
+            background-color: #fff;
+            margin: 30px auto;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('./partials/nav.ejs') %>
+    <% users.forEach(user=> {%>
+        <div class="card">
+            <div class="field">
+                <strong>Username:</strong>  <%= user.username %>
+            </div>
+            <div class="field">
+                <strong>Email:</strong> <%= user.email %>
+            </div>
+            <div class="field">
+                <strong>Phone:</strong> <%= user.phone %>
+            </div>
+            <div class="field">
+                <strong>Address:</strong> <%= user.address %>
+            </div>
+            <div class="field">
+                <strong>Role:</strong> <%= user.role %>
+            </div>
+            <div>
+                <form action="/users/<%= user._id %>?_method=DELETE" method="post">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="submit" id="delete" value="Delete">
+                </form>
+            </div>
+        </div>
+        <% }) %>
+        <div class="pagination">
+            Page No : &nbsp;
+                <% for( let index = 1; index <= pages; index++ ) { %>
+                    <a href="/users?page=<%= index %>"><button><%= index %></button></a>
+                <% } %>
+        </div>
+</body>
+
+</html>

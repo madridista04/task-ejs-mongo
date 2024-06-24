@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: rgb(212, 255, 255);
+        }
+
+        .card {
+            width: 600px;
+            background-color: #fff;
+            margin: 30px auto;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .post {
+            background-color: rgb(233, 233, 233);
+            padding: 10px 18px;
+            border-radius: 5px;
+            display: flex;
+        }
+
+        #post-user {
+            font-size: 20px;
+            font-weight: bold;
+            color: rgb(194, 191, 37);
+        }
+
+        #title {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        #description {
+            font-size: 20px;
+        }
+
+        .comment-box {
+            margin-top: 4px;
+            background-color: rgb(255, 220, 220);
+            padding: 4px;
+            border-radius: 5px;
+        }
+
+        .comment {
+            display: flex;
+            padding: 0px 16px;
+        }
+
+        .comment-user {
+            font-size: 16px;
+            font-weight: 600;
+            padding: 0px 4px;
+            color: #ff8f27;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"],
+        input[type="text"] {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        #addcomment {
+            background-color: #3341ff;
+            color: white;
+            cursor: pointer;
+        }
+
+        #update {
+            background-color: #07df00;
+            color: white;
+            cursor: pointer;
+        }
+
+        #update:hover {
+            background-color: #1eb300;
+        }
+
+        #delete {
+            background-color: #ff3333;
+            color: white;
+            cursor: pointer;
+        }
+
+        #delete:hover {
+            background-color: #b30000;
+        }
+
+        .pagination{
+            width: 600px;
+            background-color: #fff;
+            margin: 30px auto;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('./partials/nav.ejs') %>
+        <% posts.forEach(post=> { %>
+            <div class="card">
+                <div class="post">
+                    <div style="width: 100%;">
+                        <p id="post-user">User : <%= post.userId.username %>
+                        </p>
+                        <p id="title">Title: <%= post.title %>
+                        </p>
+                        <p id="description">Description: <%= post.description %>
+                        </p>
+                    </div>
+                    <% if (loggedIn._id.toString()===post.userId._id.toString()) { %>
+                        <div>
+                            <form action="/users/<%= loggedIn._id %>/posts/<%= post._id %>?_method=DELETE" method="post"
+                                style="padding: 12px;">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <input type="submit" id="delete" value="Delete">
+                            </form>
+                            <form action="/users/<%= loggedIn._id %>/posts/<%= post._id %>" method="get"
+                                style="padding: 12px;">
+                                <input type="submit" id="update" value="Update">
+                            </form>
+
+                        </div>
+                        <% } %>
+                            <% if (loggedIn.role==="admin" ) { %>
+                                <div>
+                                    <form action="/users/<%= loggedIn._id %>/posts/<%= post._id %>?_method=DELETE"
+                                        method="post" style="padding: 12px;">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="submit" id="delete" value="Delete">
+                                    </form>
+                                </div>
+                                <% } %>
+                </div>
+
+                <div class="comment-box">
+                    <form action="/users/<%= loggedIn._id %>/posts/<%= post._id %>/comments" method="post"
+                        style="padding: 12px;">
+                        <input type="submit" id="addcomment" value="Add Comment">
+                        <input type="text" id="comment" name="comment" required>
+                    </form>
+                    <% comments.forEach(cmnt=> { %>
+                        <% if (cmnt.postId.toString()===post._id.toString()) { %>
+                            <div class="comment">
+                                <p class="comment-user">
+                                    <%= cmnt.userId.username %>
+                                </p>
+                                <p style="padding-left: 4px;"> : <%= cmnt.comment %>
+                                </p>
+
+                                <% if (loggedIn._id.toString()===cmnt.userId._id.toString() ||
+                                    post.userId.toString()===loggedIn._id.toString() ) { %>
+                                    <form
+                                        action="/users/<%= loggedIn._id %>/posts/<%= post._id %>/comments/<%= cmnt._id %>?_method=DELETE"
+                                        method="post" style="padding: 12px;">
+
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="submit" id="delete" value="Delete">
+                                    </form>
+
+                                    <% } %>
+
+                                        <% if ( loggedIn.role==="admin" ) { %>
+                                            <form
+                                                action="/users/<%= loggedIn._id %>/posts/<%= post._id %>/comments/<%= cmnt._id %>?_method=DELETE"
+                                                method="post" style="padding: 12px;">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <input type="submit" id="delete" value="Delete">
+                                            </form>
+
+                                            <% } %>
+
+                            </div>
+                            <% } %>
+
+                                <% }) %>
+                </div>
+
+            </div>
+            <% }) %>
+                <div class="pagination">
+                    Page No : &nbsp;
+                    <% for( let index=1; index <=pages; index++ ) { %>
+                        <a href="/feed?page=<%= index %>"><button><%= index %></button></a>
+                        <% } %>
+                </div>
+</body>
+
+</html>

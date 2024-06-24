@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Bar</title>
+    <style>
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+        }
+
+        .nav-links {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .nav-item {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .nav-item:last-child {
+            margin-right: 0;
+        }
+
+        .nav-item a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-item a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li class="nav-item"><a href="/feed">Feed</a></li>
+            
+            <% if (loggedIn.role === 'admin') { %>
+                <li class="nav-item"><a href="/users">Users</a></li>
+            <% } %>
+            <% if (loggedIn.role === 'user') { %>
+                <li class="nav-item"><a href="/users/<%= loggedIn._id %>/posts">Create Post</a></li>
+            <% } %>
+            
+            
+            <li class="nav-item"><a href="/users/<%= loggedIn._id %>">Profile</a></li>
+            <li class="nav-item"><a href="/users/logout">Logout</a></li>
+        </ul>
+    </nav>
+</body>
+
+</html>

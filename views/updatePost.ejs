@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: auto;
+            height: 96vh;
+        }
+
+        .register-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        input[type="text"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('./partials/nav.ejs') %>
+        <div class="container">
+            <div class="register-container">
+                <h2>Update Post</h2>
+                <form action="/users/<%= loggedIn._id %>/posts/<%= postData._id %>?_method=PUT" method="post">
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" value="<%= postData.title %>"><br><br>
+
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description" value="<%= postData.description %>"><br><br>
+
+                    <input type="submit" value="Update">
+                </form>
+            </div>
+        </div>
+</body>
+
+</html>
